@@ -31,7 +31,7 @@ if (isset($_FILES['cover']) && $_FILES['cover']['error'] === UPLOAD_ERR_OK) {
 
 // Update book
 $stmt = $pdo->prepare('UPDATE books SET title = :title, release_date = :release_date,
-    price = :price, pages = :pages, language = :language, cover_path = :cover_path WHERE id = :id');
+    price = :price, pages = :pages, language = :language, summary = :summary, cover_path = :cover_path WHERE id = :id');
 
 $stmt->execute([
     'title'        => $_POST['title'],
@@ -39,6 +39,7 @@ $stmt->execute([
     'price'        => $_POST['price'],
     'pages'        => $_POST['pages'],
     'language'     => $_POST['language'],
+    'summary'      => $_POST['summary'] ?? '',
     'cover_path'   => $cover_path,
     'id'           => $id
 ]);
