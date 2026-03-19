@@ -14,13 +14,11 @@ $stmt = $pdo->prepare('SELECT b.*,
 $stmt->execute(['id' => $id]);
 $book = $stmt->fetch();
 
-// If the link was intended to create a new book, redirect to add form
 if ($id === 'new') {
     header('Location: add.php');
     exit();
 }
 
-// If book not found, show a friendly message
 if (!$book) {
     http_response_code(404);
     ?>
@@ -53,44 +51,62 @@ if (!$book) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($book['title']); ?></title>
     <style>
+        div {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            margin-top: 150px;
         }
-    
-        .container {
-            max-width: 700px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 20px 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-radius: 10px;
+        .info {
+            display: flex;
+            flex-direction: column;
+            margin-top: 0px;
+            gap: 20px;
         }
         .cover {
-            display: block;
-            max-width: 200px;
-            margin: 0 auto 20px;
+            max-width: 500px;
+            max-height: 500px;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         h2 {
             text-align: center;
-            margin-bottom: 15px;
+            margin: 0px;
         }
-        .details p {
-            margin: 8px 0;
-            border: 1px solid #000000;
-            padding: 10px;
-            border-radius: 10px;
+        h3 {
+            margin: 0px;
+        }
+        p {
+            margin: 0px;
+        }
+        
+        .details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+        h1
+        {
+            text-align: center;
+            padding: 0px;
+            margin: 0px;
         }
         .actions {
             margin-top: 20px;
             text-align: center;
+            display: flex;
+            flex-direction: row;
         }
         .actions a {
-            display: inline-block;
             margin: 0 5px;
             padding: 8px 16px;
             text-decoration: none;
@@ -109,20 +125,21 @@ if (!$book) {
 <body>
     <div class="container">
     <?php if ($book['cover_path']): ?>
-        <img class="cover" src="<?= htmlspecialchars($book['cover_path']); ?>" alt="<?= htmlspecialchars($book['title']); ?>">
+        <img class="cover" src="<?= htmlspecialchars($book['cover_path']); ?>" alt="">
     <?php endif; ?>
-    <h2><?= htmlspecialchars($book['title']); ?></h2>
+<div class="info">
     <div class="details">
-        <p><strong>Author(s):</strong> <?= htmlspecialchars($book['authors']) ?: 'Unknown'; ?></p>
-        <p><strong>Release Date:</strong> <?= htmlspecialchars($book['release_date']); ?></p>
-        <p><strong>Price:</strong> €<?= number_format($book['price'], 2); ?></p>
-        <p><strong>Description:</strong> <?= htmlspecialchars($book['summary']) ?: 'No description available'; ?></p>
+        <h1><?= htmlspecialchars($book['title']);?></h1>
+        <h2><?= htmlspecialchars($book['authors']) ?: 'Unknown'; ?></h2>
+        <h3>€<?= number_format($book['price'], 2); ?></h3>
+        <p><?= htmlspecialchars($book['summary']) ?: 'No description available'; ?></p>
     </div>
     <div class="actions">
         <a href="edit.php?id=<?= $book['id']; ?>">Edit</a>
         <a class="delete" href="delete.php?id=<?= $book['id']; ?>" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
         <a class="back" href="index.php">Back</a>
     </div>
+</div>
     </div>
 </body>
 </html>

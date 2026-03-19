@@ -27,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 	}
 
-	// Insert book
 	$stmt = $pdo->prepare('INSERT INTO books (title, release_date, price, pages, language, summary, cover_path) VALUES (:title, :release_date, :price, :pages, :language, :summary, :cover_path)');
 	$stmt->execute([
 		'title' => $_POST['title'],
@@ -41,13 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	$book_id = $pdo->lastInsertId();
 
-	// Handle author
 	if (!empty($_POST['name'])) {
 		$name_parts = explode(' ', trim($_POST['name']), 2);
 		$first = $name_parts[0];
 		$last = $name_parts[1] ?? '';
 
-		// Try to find existing author
+	
 		$stmt = $pdo->prepare('SELECT id FROM authors WHERE first_name = :first AND last_name = :last LIMIT 1');
 		$stmt->execute(['first' => $first, 'last' => $last]);
 		$author = $stmt->fetch();
@@ -60,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$author_id = $pdo->lastInsertId();
 		}
 
-		// Link book and author
+
 		$stmt = $pdo->prepare('INSERT INTO book_authors (book_id, author_id) VALUES (:book_id, :author_id)');
 		$stmt->execute(['book_id' => $book_id, 'author_id' => $author_id]);
 	}
@@ -69,7 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	exit();
 }
 
-// Show form
 ?>
 
 <!DOCTYPE html>

@@ -7,13 +7,12 @@ if (!isset($_POST['id'])) {
 
 $id = $_POST['id'];
 
-// Handle file upload
-$cover_path = $_POST['cover_path'] ?? null; // keep existing path by default
+
+$cover_path = $_POST['cover_path'] ?? null;
 
 if (isset($_FILES['cover']) && $_FILES['cover']['error'] === UPLOAD_ERR_OK) {
     $upload_dir = './uploads/';
     
-    // Make sure the uploads folder exists
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0755, true);
     }
@@ -29,7 +28,7 @@ if (isset($_FILES['cover']) && $_FILES['cover']['error'] === UPLOAD_ERR_OK) {
     }
 }
 
-// Update book
+
 $stmt = $pdo->prepare('UPDATE books SET title = :title, release_date = :release_date,
     price = :price, pages = :pages, language = :language, summary = :summary, cover_path = :cover_path WHERE id = :id');
 
@@ -44,11 +43,10 @@ $stmt->execute([
     'id'           => $id
 ]);
 
-// Update author
 if (!empty($_POST['name'])) {
     $name_parts = explode(' ', trim($_POST['name']), 2);
     $first = $name_parts[0];
-    $last  = $name_parts[1] ?? ''; // avoid undefined index if no last name
+    $last  = $name_parts[1] ?? '';
 
     $stmt = $pdo->prepare('UPDATE authors a 
         JOIN book_authors ba ON a.id = ba.author_id 
